@@ -3,6 +3,7 @@ import DashboardAdmin from '../DashboardAdmin'
 import './materiel.css'
 import { BsXCircleFill ,BsPencilFill,BsFillPlusCircleFill} from "react-icons/bs";
 import Loading from '../loading/Loading';
+import LoadingImg from '../loading/LoadingImg';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import axios from 'axios'
@@ -41,6 +42,8 @@ const [materiel,setMateriel]=useState(initialState)
     const [open, setOpen] = useState(false);
     const[ajouter,setAjouter]=useState(false);
     const [categories,Setcategories]=useState([])
+    const [categorie,Setcategorie]=useState()
+    const [view,setView]=useState(false)
     const handleOpen = () => {
  
       setOpen(true);
@@ -132,6 +135,31 @@ const handleChangeInput = e =>{
   console.log("mate",materiel)
 }
 
+const handleselectchange=e=>{
+  const {name, value} = e.target
+  setMateriel({...materiel, [name]:value})
+  const id=value
+
+  if(id!==''){
+    console.log('equipe',id)
+    categoriechange(id)
+    
+  }
+}
+
+const categoriechange=(id)=>{
+  try {
+    fetch('/categorie/categorie/'+id).then(res=>res.json()).then(data=>{
+      console.log("categorie",data)
+      Setcategorie(data.type_cat)
+      setView(false)
+    })
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 
 const handleSubmit = async e =>{
@@ -200,6 +228,52 @@ const deletMateriel=(id)=>{
   }
 }
 
+const getmatById=async(id)=>{
+  try {
+    await fetch('/materiel/materiel/'+id,{
+      method:'get',
+  
+    }).then(res=>res.json()).then(data=>{
+      console.log("getmateriel",data.result)
+
+     setMateriel(data.result)
+      setImages(data.result.images)
+  
+    })
+  } catch (error) {
+    console.log(error)
+  }
+
+}
+
+const updateMateriel=async(id)=>{
+  try {
+ 
+   // await axios.put(`/materiel/materiel/${id}`, {...materiel, images} )
+    await fetch('/materiel/materiel/'+id,{
+      method:'put',
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify({...materiel,images}),
+    }).then(res=>res.json()).then(async data=>{
+     
+      handleClose()
+      toast.success(<b>projet {materiel.libelle} modifier avec succès</b>)
+      setTimeout(() => {
+       // console.log("msg",employe)
+        getAllMateiel()
+      }, 300);
+     
+    })
+
+ 
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
   return (
     <>
@@ -228,7 +302,7 @@ const deletMateriel=(id)=>{
                    
                 <input type="file" name="file" id="file_up" onChange={handleUpload}/>
                 {
-                    loading ? <div id="file_img"><Loading /></div>
+                    loading ? <div id="file_img"><LoadingImg /></div>
 
                     :<div id="file_img" style={styleUpload}>
                         <img src={images ? images.url : ''} alt=""/>
@@ -241,7 +315,7 @@ const deletMateriel=(id)=>{
               <div className="row">
                     <label htmlFor="categorie">categorie: </label>
                     <select name="categorie" 
-                    onChange={handleChangeInput} 
+                    onChange={handleselectchange} 
                     value={materiel.categorie.type_cat}   >
                         <option value="" >Please select a categories</option>
                         {
@@ -257,11 +331,34 @@ const deletMateriel=(id)=>{
                         
                     </select>
                 </div>
+
+                {
+                    view ? ( <div className='user'>
+                      
+                   
+                      
+                      <p className='perso' key={materiel._id}>
+                      {materiel.categorie.type_cat} 
+                     
+                      </p>
+                     </div> ):(<div className='user'> 
+                     
+                       
+                  
+                              <p className='perso' >
+                                
+                              {categorie}
+                                  </p>
+                       
+                       
+                     
+                     </div>)
+                  }
             
  
           <div className='row'>
                 {ajouter ?  (<button type='submit'>Ajouter</button>):(<button type='button' onClick={()=>{
-                // updateprojet(projet._id)
+                updateMateriel(materiel._id)
                 }}>Modifier</button>)
                 
                 }
@@ -278,7 +375,10 @@ const deletMateriel=(id)=>{
     </div>
 
 
-
+    <Toaster
+  position="top-center"
+  reverseOrder={true}
+/>
 
 
 
@@ -316,11 +416,11 @@ handleOpen()
      <div className="col col-9" data-label="Actions">
      <div className='row'>
      <BsPencilFill onClick={()=>{
-       //setAjouter(false)
-       //handleOpen()
-       //console.log("objet ",mat._id)
-       //getmatjet(mat._id)
-       //setView(true)
+       setAjouter(false)
+       handleOpen()
+       console.log("objet ",mat._id)
+       getmatById(mat._id)
+       setView(true)
      }}style={{color:'blue'}} />
        <BsXCircleFill onClick={()=>{
         deletMateriel(mat._id)

@@ -10,7 +10,10 @@ import Equipe from './admin/equipe/Equipe';
 import Projet from './admin/projet/Projet';
 import Materiel from './admin/materiel/Materiel';
 import Loading from './admin/loading/Loading'
-
+import AcceuilAdmin from './admin/acceuilAdmin.js/AcceuilAdmin';
+import Tache from './chef_projet/taches/Tache';
+import Profil from './chef_projet/profil/Profil';
+import Reservation from './chef_projet/reservation/Reservation';
 function Pages() {
       const isloginAdmin=localStorage.getItem('LoginAdmin')
       const islogin=localStorage.getItem('Login')
@@ -19,9 +22,12 @@ function Pages() {
     <Routes>
 
           <Route path="/" element={<Login/>} />
-          <Route path="/acceuil" element={<Acceuil/>} />
+          <Route path="/acceuil" element={islogin?<Acceuil/>:<NotFound/>} />
+          <Route path="/taches" element={islogin?<Tache/>:<NotFound/>} />
+          <Route path="/reservation" element={islogin?<Reservation/>:<NotFound/>} />
+          <Route path="/profil" element={islogin?<Profil/>:<NotFound/>} />
           <Route path="/load" element={<Loading />} />
-          <Route path="/admin" element={isloginAdmin ?<DashboardAdmin/>:<NotFound />} />
+          <Route path="/admin" element={isloginAdmin ?<AcceuilAdmin/>:<NotFound />} />
         
           <Route path="/employe" element={isloginAdmin ? <Employe/>:<NotFound /> } />
           <Route path="/equipe" element={isloginAdmin ? <Equipe/>:<NotFound /> } />

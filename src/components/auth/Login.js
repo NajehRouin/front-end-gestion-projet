@@ -72,7 +72,7 @@ const onChangeInput=e=>{
           window.location.href='/admin';
           return true
         }
-        if (data.role.libelle==="chef de projet"){
+        if (data.role.libelle==="chef projet"){
           localStorage.setItem('Login', true)
           localStorage.setItem('chef',JSON.stringify(data))
           window.location.href='/acceuil';

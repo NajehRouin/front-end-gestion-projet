@@ -55,7 +55,7 @@ const handleClose = () => {
 };
 
 const getAllProjet =()=>{
-  fetch('/projet/projet').then(res=>res.json()).then(data=>{
+  fetch('/projet/all_projet').then(res=>res.json()).then(data=>{
     console.log("projet",data)
     setLoad(true)
     setTimeout(() => {
@@ -195,6 +195,8 @@ const getprojet=async(id)=>{
   }
 
 }
+
+
 
 const updateprojet=async(id)=>{
   try {
@@ -364,7 +366,15 @@ handleOpen()
         <div className="col col-5" data-label="Role">{pro.data_fin_projet}</div>
         <div className="col col-6" data-label="etat_projet">{pro.etat_projet}</div>
         <div className="col col-7" data-label="nom_equipe">{pro.equipe.nom_equipe}</div>
-        <div className="col col-8" data-label="tache">{pro.tache}</div>
+        <div className="col col-8" data-label="tache">{pro.tache.map((t,i)=>(
+           <div key={i}>
+        
+           <h6>{t.titre}</h6>
+      
+         
+        </div>
+
+        ))}</div>
         <div className="col col-9" data-label="Actions">
         <div className='row'>
         <BsPencilFill onClick={()=>{
