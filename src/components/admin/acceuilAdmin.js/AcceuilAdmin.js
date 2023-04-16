@@ -1,35 +1,109 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DashboardAdmin from '../DashboardAdmin'
-import { Canvas } from  'react-canvas-js'
-const particleOptions = 
-    {
-        "maxParticles": 0,
-        "shapes": [
-         
-         
-          {
-            "type": "image",
-            "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAMgCAMAAADsrvZaAAAA2FBMVEUAAADRQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/RQD/////QOjn//f3RQUDQPjzUSkn009PQODfzzs7+/Pz77u7US0nrsbDPNDLPNzXkk5L++PjSR0Xnn57ffXzccnH99vb55+frrazyyMfuvb7xy8rhhoXpqKjXW1nVV1bjkI/VS0n78PD12trfeXjYYF/stbTVUVDaZmX56en44+OslvTqAAAAHXRSTlMAcAUC/I/bXjIl+e61GBDny2cKetKjhD1K8fPBUWxDl38AABBqSURBVHja7N0JbqswEIDhiY0xBswalizc/5qvUasqfUEpTZO2wf93hxGzGgHwaI1PhvFo67reAL+qrmt7HIfEN/IHaOUH23f5YRuX2T6agF8X7bMy3h7yrreDV1p+i/Lu2OdxuSMu8CdFuzLO+6PzSn6ccmOblymxgT8uSsu8HZ2SH6SdNdVuAp7ErjLWafkRuhhMlU3AU8kqMxSPjxHt6jwjscITirK8fvBnRCVtlU7Ak0qrNlHyKCox2wl4alvzoBBRzsTkVnh6UWwe0dNyLeGBdYji1sl9FfZAeGA1ooMt5H500tHXxapkXaLlTvwmnoCViTf+Xp8POrtYofQuH5HG0trFSm1tI9/kDdUHVisz/pvpVU56hRVL8++kWWqsJmDVqlHJjZSle4XVi62SmzSbcgJWr2wbuUHRcxKFIOz64ob4MPsJCMLeFF+PD9pXCMbeFHw/gHtFSNMTHwjKvm9kMbWhPkdgdhu1fP5BfxfBKZfOQ/TIfBABikctSyTslyBIVSIL+HwCgpR7+VTDAAShSk0jn9CW+w8EK7Narku4H0TAtolc5Tte90HAos7LFXpDAYKgpRt9LcFiAoLAxVeSrIIEC6GLuoIOFnBDJ8sdJiB4ByezVEuFDkxpq2SOo0IHXsROZihDhQ68iIyixQt8qdWrWFIEXqVGsYQFfGElS7UTgDcXjSzHGSHwrnLyga6pQIB3aa3lXMEQHThzKOTcwBYWcCYb5IxmSAici4ymRAeWlensuQMfZVbeNWYC8IFpyLCAJTnWyGPuwH92I2smwIJ1k4LXeIELeSGvHL8DAS6U7m1KeGQPC7iQHrWc6J4xOnAh6rWcKEoQYEau5MRzjA7MiL2cDNTowIxykBPLmBCYsbNyQo0OzIl6eaG7CcCM7tTGamhiAbPyRkQ85+jArIPnxTjg+vtxA2MQYFZ86vOOjEGAWeUoIkfu0YFZ2VFELLu8wKzUikjNnPAf+3RQAyAMBVDsL8HABMy/TQyMl3BvPRSunj0z+wBXe2bWAQSBv5YgIAgIAoLAN0EgCAJBEAiCQBAEgiAQBIEgCARBIAgCQRAIgkAQBIIgEASBIAgEQSAIAkEQCIJAEASCIBAEgSAIBEEgCAJBEAiCQBAEgiAQBIEgCARBIAgCQRAIgkAQBIIgEASBIAgEQSAIAkEQCIJAEASCIBAEgSAIBEEgCAJBEAiCQBAEgiAQBIEgCARBIAgCQRAIgkAQBIIgEASBIAgEQSAIAkEQCIJAEISXfToQAAAAABDkb73BBOUQQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgEPt0IAAAAAAgyN96gwnKoSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCxD6d5bQRRVEUHYntKgO2cYNDExMMSRBNmP+MIiUSX+jo+sNKHrX2AJ503tWSQoBIIUCkECBS6H8DMm2mzzjqM246TqNCRwGyPT9ppL68qT9ppe0Bm5o51BE6L3zUcYBMNqeNtLuaFDf1l7PTNprdrat3et2dDrlN4fjHAbLs2mi8uDyrjtpcdE00vv6yqt7p6mbcDbjlvwMyH7fRQUDGbXQYkAE3BwSQ0QgQQAABBJC/AQIIICFAAAEkBAgggIQAAQSQECCAABICBBBAQoAAAkgIEEAACQECCCAhQAABJAQIIICEAAEEkBAggAASAgQQQEKAAAJICBBAAAkBAgggIUAAASQECCCAhAABBJAQIIAAEgIEEEBCgAACSAgQQAAJAQIIICFAAAEkBAgggIQAAQSQECCAABICBBBAQoAAAkgIEEAACQECCCAhQAABJAQIIICEAAEEkI/r6jUDpKvXDJDugI7x6FCBXM++VttdNwKke6xO2t8uWgFy81wdtXzrqh/1tqw++vxroEB+bqbbWtO7RSNA5vttX9s0eX1sBci3++Km/mVXBnL7Mi0e/2k2UCCL76tJrVUzQC7203Vp0nR13w6Ql1XxTtsDgGyrjz4MF8h61FcanTUDZL7vJ32p1VM7QB6KmyY/DgByctaXOrsfMpBS08aAjAo1BmRU6kAgtY9aA/InQAABBBBAAAHkPUAAAQQQQAAB5D1AAAEEkA8CBBBAQoAAAkgIEEAACQECCCAhQAABJAQIIICEAAEEkBAggAASAgQQQEKAAAJICBBAAAkBAgggIUAAASQECCCAhAABBJAQIIAAEgIEEEBCgPxmn45RE4gCAIjeJLuJiKCQlAFTRBDvfyUb13L81v9NP+UDBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQABBJAIEEAAiQCpxoEMBAggUwL5Pi+nZb+8bL+c/gB5joDMAuRw3n3+jLT7ugHyHAGZBch6uR6vQx1//wHZAmQWIB/rYbgVkC1ApgHyToBsAQIIIIAA8ggQQACJAAEEkAgQQACJAAEEkAgQQACJAAEEkAgQQACJAAEEkAgQQACJAAEEkAgQQACJAAEEkAgQQACJAAEEkAgQQACJALmzV0erTURRGEafJCYzo6nFpqlimxiUUlt9/0fywosN7rA5gTmEwbUe4D9hk48RiEAKAhGIQAoCEYhACgIRiEAKAhGIQAoCEYhACgIRiEAKAhGIQAoCEYhACgIRiEAKAhGIQAoCEYhACgIRiEAKAhGIQAoCEYhACgIRiEAKAhGIQAoCEYhACgIRiEAKAhGIQAoCEYhACgL57wJ53czu3fPukkBaR68dyGZ+9xcE8nv+H3BJIMfm1cN01x5I6+jr1QLZbef39Pmu9fmXp9bRw5fiRv0D2XzdHrdzO35rPtSvw3Z+p7fWQKZT8+jDvm10WL89vm8d3XUMpLa/7WC/ajU0b05DMdM/kJvH29ZTdTpUB9PQ4X+ybx4dpvbRhrk+gYzrDsYOz5ej/QO5P42f1qH3obJ1uMbz42JGzwdC7y/IaVgPK5ZHIP8QCEEgiUAIAkkEQhBIIhCCQBKBEASSCIQgkEQgBIEkAiEIJBEIQSCJQAgCSQRCEEgiEIJAEoEQBJIIhCCQRCAEgSQCIQgkEQhBIIlACAJJBEIQSCIQgkASgRAEkgiEIJBEIASBJAIhCCQRCEEgiUAIAkkEQhBIIhCCQBKBEASSCIQgkEQgBIEkAiEIJBEIQSCJQAgCSQRCEEgiEIJAEoEQBHLG7kYg/CWQM358fJ7fg0CWSSDJ95cOfg7jigUSSDJ+6EAeCyUQEAgIBAQCBYFAQSBQEAgUBAIFgcAf9ulAAAAAAECQv/UGE5RDQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASJfToQAAAAABDkb73BBOUQDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCwBAEhiAwBIEhCAxBYAgCQxAYgsAQBIYgMASBIQgMQWAIAkMQGILAEASGIDAEgSEIDEFgCAJDEBiCEPt0aAMgDABAsKIJCa4DdP81CR5eVt3tcARBIAgCQRAIgkAQBIIgEASBIAgEQSAIAkEQCIJAEASCIBAEgSAIBEEgCAJBEAiCQBAEgiAQBIEgCARBIAgCQRAIgkAQBIIgEASBIAgEQSAIAkEQOGmNMdYG/oPMDXyYb5Dr3vCwcyfICsJAEIa7Etk3BREsyP2v+cStokx5gfd/l2A6PQMMZSZprQIAQ7VKmrsAwNDNkqY0ADCkk6T8HAAYzrmkZgkADEsjqa8DAEPdS/JjAGAYvW4uNIWA4XDRJrsGADvXTJuJIgQwdJM2DUUIYEgbbRzPWIChdtp4UjpgZXSvjV/Z5wV2ytXrriClAztdoYeWEALs1K0e3BAAfBmcnmaqQuDLddZLcQwAPhwLvfRJAPAh6fWWcZcOfKgyiRkL+DFhvfmEMh2IHBKvyMSMBUSqSbGWw3QgsrSK+RP7WMBbefKSiOnA74gu1k0Aa80kxv/jgMg51zeXkEKAuzJx2sk5TQfu0lx7jrIQ2BwSJ0PBJwS4SQtZ3EAKAUI5OJkK6nQgLIVsnq13oMq8ZGtHcjr+ucPY6omnXvy1d2dZbsJAFIYLCSEJJEYzGDv732Ze8pKTPg7tqQ36vz3UoXRVJXAj4v2XzjinI2llpuWGSJOFlOVjlL8wkgV8NYRFkgV8mWDd1jO0iFSVppf/irzUi0SFKBs4lguRpNbJFnrhNgQJKq5aNlGWH4YgOY1VspHKeO4diTlnSjbrp/UXkJB16uUbakOFICGrqeVbaq5DkI4/9cE3BLhdH9vVEyd1JOE81XKHfiDtRQKaoZe7KMuNIQ6vsErupBamTnBw7aLkbtoFwiwcWBmclkdEw34IDqsyUR7UW3YMcVAn28vDtBtps3BA5ei0PEPMSLNwOEUW5Um0GzmJ4FCq0Wl5ntpeeA8Ih5FfbC3P5YeCEsEh5MXg5emUN5QI9i8vjFfyCsoZIl/s3Mk4Ja+i3NCS+WK3ynZwSl5J+y5UdFrYobwKndfyarqeTUvqi52pWjPXWt5Ce2taFg6xG2trrNfyRsovQ2hKmi18uLxswrB4JW+nor9OoWjOVAk+Un5uijBdfVTyU7SKs53GcDkVTbVSKfgA+Vo1xekSxsnOUWn5AH1083K1XddlwI/qus5el9nFXgC82G8b6IxHUo3RnQAAAABJRU5ErkJggg=="
-          },
-          
-         
-        ],
-        "size": 100,
-        "minSpeed": 0.1,
-        "maxSpeed": 0.3,
-        "alpha": 0.9,
-        "backgroundColor": "#f1f1f1"
-    }
+import './acceuiladmin.css'
+import PersonIcon from '@mui/icons-material/Person';
+import GroupsIcon from '@mui/icons-material/Groups';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import { useEffect } from 'react';
+
   
 function AcceuilAdmin() {
+
+  const [employes,SetEmployes]=useState([])
+  const [equipes,SetEquipe]=useState([])
+  const [projet,SetProjet]=useState([])
+  const [projetTermniner,SetprojetTerminer]=useState([])
+
+  
+
+const getAllProjet=async()=>{
+  await fetch('/projet/projet').then(res=>res.json()).then(data=>{
+   // console.log('data',data)
+    let projet_terminer=[]
+
+    SetProjet(data)
+    projet_terminer.push(data)
+
+ 
+
+  })
+  
+
+}
+const getAllUser=async()=>{
+ await fetch('/user/getusers').then(res=>res.json()).then(data=>{  
+      SetEmployes(data)
+      })
+}
+const getAllEquipe=async()=>{
+  await fetch('/equipe/equipe').then(res=>res.json()).then(data=>{
+   
+
+  
+    SetEquipe(data.result)
+  
+  
+  
+    
+  })
+}
+
+useEffect(()=>{
+  getAllProjet()
+  getAllUser()
+  getAllEquipe()
+  SetprojetTerminer(projet.filter(item=>item.etat_projet==="terminer"))
+},[projet])
+
+
+
+
   return (
     <>
-     <DashboardAdmin />
-     <div className="container_projet" >
 
-     <h2>Listes Des Projets </h2>
-     <Canvas options={particleOptions} />
-     </div>
+<DashboardAdmin/>
+
+    
+     <div className="featured">
+      <div className="featuredItem">
+        <span className="featuredMoney">
+          <PersonIcon fontSize="large" />
+        </span>
+        <div>
+          <span className="featuredTitle">Employes</span>
+          <span className="featuredMoneyRate">{employes.length} </span>
+        </div>
+      </div>
+      <div className="featuredItem">
+        <span className="featuredMoney">
+          <GroupsIcon fontSize="large" />
+        </span>
+        <div>
+          <span className="featuredTitle">Equipes</span>
+          <span className="featuredMoneyRate"> {equipes.length} </span>
+        </div>
+      </div>
+      <div className="featuredItem">
+        <span className="featuredMoney">
+          <AssignmentIcon fontSize="large" />
+        </span>
+        <div>
+          <span className="featuredTitle">Projets</span>
+          <span className="featuredMoneyRate">{projet.length}</span>
+        </div>
+      </div>
+      <div className="featuredItem">
+        <span className="featuredValider">
+          <AssignmentTurnedInIcon fontSize="large" />
+        </span>
+        <div>
+          <span className="featuredTitle">Projet Terminer</span>
+          <span className="featuredMoneyRate">{projetTermniner.length} </span>
+        </div>
+      </div>
+    </div>
+   
    
     </>
   )

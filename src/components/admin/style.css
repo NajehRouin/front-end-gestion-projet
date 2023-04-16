@@ -9,7 +9,7 @@
    display: flex;
    align-items: center;
    top: 0;
-   background-color: #319795;
+   background-color: #285da2;
   }
   .logo{
     font-size: 35px;
@@ -98,7 +98,7 @@
   .sidebar{
     width: 274px;
     height: 100%;
-    background-color: #393939;
+    background-color: #23497b;
     position: fixed;
   }
   li{
@@ -126,7 +126,14 @@
     color: #319795;
     border-radius: 30px 0 0 30px;
   }
-
+  .sidebar a:hover{
+    background-color: #fff;
+    padding-top: 0.7rem;
+    padding-bottom:0.7rem;
+    color: #319795;
+    border-radius: 30px 0 0 30px;
+    
+  }
   .sidebar a:focus{
     background-color: #fff;
     padding-top: 0.7rem;
