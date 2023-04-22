@@ -2,12 +2,13 @@ import React from 'react'
 import Navbar from './navbar/Navbar'
 import { useState,useEffect } from 'react'
 
-import { BsXCircleFill ,BsPencilFill,BsPersonPlusFill} from "react-icons/bs";
+import { BsPencilFill} from "react-icons/bs";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import { GrProjects } from "react-icons/gr";
+
 import Loading from '../admin/loading/Loading';
-import axios from 'axios';
+
+import toast, { Toaster } from 'react-hot-toast';
 import './acceuil.css'
 const style = {
   position: 'absolute',
@@ -36,9 +37,14 @@ const initialState = {
 const initialStateprojet = {
   titre_projet:'',
   tache:[],
+  etat_projet:"en_attente",
   _id: ''
 }
-
+const etat=[
+  {id:"1",etat:"en_attente"},
+  {id:"2",etat:"en_cours"},
+  {id:"3",etat:"terminer"},
+]
 function Acceuil() {
 
   const chef =JSON.parse(localStorage.getItem("chef"))
@@ -46,14 +52,14 @@ function Acceuil() {
 
 const [projets,SetProjets]=useState([])
 const[equipe,setEquipes]=useState([])
-const [id,SetId]=useState()
+
 const [open, setOpen] = useState(false);
 const [tacheopen, setTacheOpen] = useState(false);
-
+const [etat_open, setEtat_Open] = useState(false);
 const [taches,setTache]=useState(initialState)
 const [projet, SetProjet] = useState(initialStateprojet)
 const[ajouter,setAjouter]=useState(false);
-const [getTaches,setGetTaches]=useState([])
+
 const handleOpen = () => {
  
   setOpen(true);
@@ -69,47 +75,65 @@ const handleOpentache = () => {
 const handleClosetache = () => {
   setTacheOpen(false);
 };
+const handleOpenEtat = () => {
+ 
+  setEtat_Open(true);
+};
+const handleClosEtat = () => {
+  setEtat_Open(false);
+};
 
   const filterprojet=async()=>{
-    console.log("nom",JSON.stringify(chef._id))
-    const membre=JSON.stringify(chef._id)
-   await fetch('/equipe/find',{membre}).then(res=>res.json()).then(data=>{
-      console.log("equipe",data.result)
-     // setLoad(true)
-     SetId(data.result._id)
-    fetch('/projet/projet').then(res=>res.json()).then(result=>{
-       
-      const projet=result.filter(item => item.equipe._id===data.result._id)
-      console.log("projetfetch",projet)
-      
-      SetProjets(projet)
-    
-  
-    const idtache= projet.map((pro,index)=>(pro.tache))
-    for(let j=0;j<idtache.length;j++){
-      console.log("idtache",idtache[j])
-    }
-      
-    })
-      setTimeout(() => {
-        // console.log("msg",employe)
-        setEquipes(data.result)
+    console.log("id",(chef._id))
+   
+
+
+    const membre=chef._id
  
-    
-       }, 1000);
   
+    
+
+    await fetch('/equipe/findeq', {
+      method: 'POST',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({membre})
       
+    }).then(res=>res.json()).then(data=>{
+
+      fetch('/projet/projet').then(res=>res.json()).then(result=>{
+       
+        const projet=result.filter(item => item.equipe._id===data.result._id)
+        console.log("projetfetch",projet)
+        
+        SetProjets(projet)
+      
+    
+      const idtache= projet.map((pro,index)=>(pro.tache))
+      for(let j=0;j<idtache.length;j++){
+        console.log("idtache",idtache[j])
+      }
+        
+      })
+        setTimeout(() => {
+          // console.log("msg",employe)
+          setEquipes(data.result)
+   
+      
+         }, 1000);
+
     })
+
+  
 
 
   }
 
- 
-
-
   useEffect(()=>{
     filterprojet()
-   //myProject()
+
    },[])
 
 
@@ -121,10 +145,11 @@ const handleClosetache = () => {
     console.log("projet select",{taches})
   
   }
-  const handleSubmit = async e =>{
-    e.preventDefault()
-    console.log("taches",{...taches})
-  }
+const handlechnageetatprojet = e =>{
+  const {name, value} = e.target
+  SetProjet({...projet,[name]:value})
+  console.log("eta projet",{[name]:value})
+}
 
   const getprojet=async(id)=>{
     try {
@@ -186,10 +211,72 @@ await fetch('/projet/projet/'+id,{
   body:JSON.stringify({...projet}),
 }).then(res=>res.json()).then(async data=>{
   console.log(data)
+  handleClose()
+  toast.success(<b>tache créer</b>)
+  setTimeout(() => {
+    // console.log("msg",employe)
+    filterprojet()
+   }, 300);
 })
 
 
   }
+
+
+  const update_etatprojet = async(id)=>{
+    console.log("projet",projet.etat_projet)
+    const etaProjet= projet.tache.filter(item=>item.etat_tache==="terminer")
+    console.log("filterr",etaProjet)
+    console.log("length",projet.tache.length)
+    if (etaProjet.length!==projet.tache.length){
+
+      if ((projet.etat_projet==="en_attente") ||(projet.etat_projet==="en_cours")){
+        await fetch('/projet/projet/'+id,{
+          method:'put',
+          headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body:JSON.stringify({...projet}),
+        }).then(res=>res.json()).then(async data=>{
+          console.log(data)
+          handleClosEtat()
+          toast.success(<b>projet modifier</b>)
+          setTimeout(() => {
+            // console.log("msg",employe)
+            filterprojet()
+           }, 300);
+        })
+      }
+
+
+else{
+  alert(" ce projet ne peut pas etre modifié en raison des taches incomplets")
+  handleClosEtat()
+  return false 
+}
+     
+    }
+    else{
+      await fetch('/projet/projet/'+id,{
+        method:'put',
+        headers:{
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({...projet}),
+      }).then(res=>res.json()).then(async data=>{
+        console.log(data)
+        handleClosEtat()
+        toast.success(<b>projet modifier</b>)
+        setTimeout(() => {
+          // console.log("msg",employe)
+          filterprojet()
+         }, 300);
+      })
+    }
+  }
+
   return (
 <>
     <Navbar/>
@@ -219,9 +306,10 @@ await fetch('/projet/projet/'+id,{
       
         { !ajouter && (<h3>Detaill Tache {taches.titre}</h3>)} 
         <table className='table'>
+        <tbody>
   <tr>
     <th>tache</th>
-    <th>descriptioni</th> 
+    <th>description</th> 
     <th>data_debut</th>
     <th>data_fin</th>
     <th>priorite</th>
@@ -236,7 +324,7 @@ await fetch('/projet/projet/'+id,{
     <td>{taches.etat_tache}</td>
   </tr>
  
-
+</tbody>
 </table>
 
    
@@ -248,8 +336,76 @@ await fetch('/projet/projet/'+id,{
       </Modal>
     </div>
 
+    {
+//modale eta projet 
+    }
+
+<div>
+      
+      <Modal
+        open={etat_open}
+        onClose={handleClosEtat}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+        <div className='form_tache'>
+      
+        { !ajouter && (<h3>modifier etat projet</h3>)} 
 
 
+      
+<div className="row_projet">
+                  
+                    <select name="etat_projet" 
+                   onChange={handlechnageetatprojet}
+                    >
+                        <option value="" >Please select etat projet</option>
+                        {
+                       
+                       etat.map(e => (
+                             
+                              <option value={e.etat} key={e.id}  >
+                                  {e.etat}
+                                
+                              </option>
+                  
+                          ))
+                        }
+                    </select>
+                    <button type='button' className='btn_modif' onClick={()=>{
+                 update_etatprojet(projet._id)
+                }}>Modifier etat projet</button>
+                </div>
+              
+     
+                
+                
+            
+         
+       
+  
+
+
+   
+    
+
+    </div>
+   
+        </Box>
+      </Modal>
+    </div>
+
+
+    <Toaster
+  position="top-center"
+  reverseOrder={true}
+/>
+
+
+{
+// modale creer tache 
+}
 
      <div>
       
@@ -279,6 +435,7 @@ await fetch('/projet/projet/'+id,{
           <div className='row'>
           {ajouter ?  ( <button type='button' onClick={()=>{
                  updateProjet(projet._id)}}>créer</button>):(<button type='button' onClick={()=>{
+                 
                  
                   }}>Modifier tache</button>)}
                 
@@ -320,7 +477,33 @@ await fetch('/projet/projet/'+id,{
         <div className="col col-3" data-label="description_projet">{pro.description_projet}</div>
         <div className="col col-4" data-label="data_debut_projet">{pro.data_debut_projet}</div>
         <div className="col col-5" data-label="data_fin_projet">{pro.data_fin_projet}</div>
-        <div className="col col-6" data-label="etat_projet">{pro.etat_projet}</div>
+        <div className="col col-6"  
+        onClick={()=>{getprojet(pro._id)  
+                  handleOpenEtat()
+        }} data-label="etat_projet">
+          { pro.etat_projet==="terminer" ?(
+          <div key={index}>
+      
+          <p 
+         
+          style={{color:'#0EDC86'}} >{pro.etat_projet}</p>
+       
+        
+        
+       </div>
+        ):(
+          <div key={index}>
+      
+      <p  style={{color:'#FF6E61'}} >{pro.etat_projet}</p>
+   
+    
+   </div>
+        )
+        
+        
+        
+        
+        }</div>
         <div className="col col-7" data-label="equipe">{pro.equipe.nom_equipe}</div>
         <div className="col col-8" data-label="tache">{pro.tache.map((t,i)=>(
    t.etat_tache==="terminer" ? (<div key={i}>
@@ -330,6 +513,7 @@ await fetch('/projet/projet/'+id,{
    get_Taches(t._id)}}style={{color:'#0EDC86'}} >{t.titre}</p>
 
  
+
 </div>):(<div key={i}>
         
         <p onClick={()=>{setAjouter(false)

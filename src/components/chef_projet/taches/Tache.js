@@ -1,10 +1,11 @@
 import React from 'react'
 import Navbar from '../navbar/Navbar'
-import { BsXCircleFill ,BsPencilFill,BsPersonPlusFill} from "react-icons/bs";
+import {BsPencilFill} from "react-icons/bs";
 import { useState,useEffect } from 'react'
 import './tache.css'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import toast, { Toaster } from 'react-hot-toast';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -28,11 +29,13 @@ const initialState = {
   _id: ''
 }
 
-const initialStateprojet = {
+const etat=[
+  {id:"1",etat:"en_attente"},
+  {id:"2",etat:"en_cours"},
+  {id:"3",etat:"terminer"},
+]
 
-  tache:[],
-  _id: ''
-}
+
 function Tache() {
   const chef =JSON.parse(localStorage.getItem("chef"))
 
@@ -55,8 +58,16 @@ function Tache() {
   
     const filterprojet=async()=>{
       console.log("nom",JSON.stringify(chef._id))
-      const membre=JSON.stringify(chef._id)
-     await fetch('/equipe/find',{membre}).then(res=>res.json()).then(data=>{
+      const membre=chef._id
+      await fetch('/equipe/findeq', {
+        method: 'POST',
+        headers: {
+          Accept: 'application.json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({membre})
+        
+      }).then(res=>res.json()).then(data=>{
         console.log("equipe",data.result)
        // setLoad(true)
        SetId(data.result._id)
@@ -104,6 +115,15 @@ function Tache() {
       console.log("tache input",{taches})
     
     }
+    const handleChangeSelect = e =>{
+  
+
+      const {name, value} = e.target
+      console.log("tache select", value)
+      setTache({...taches, [name]:value})
+      console.log("tache select",{taches})
+    
+    }
     
   const get_Taches=async(id)=>{
     try {
@@ -137,7 +157,7 @@ function Tache() {
       }).then(res=>res.json()).then(async data=>{
        
         handleClose()
-        
+        toast.success(<b>Tache {taches.titre} modifier avec succès</b>)
         setTimeout(() => {
          // console.log("msg",employe)
          filterprojet()
@@ -155,7 +175,10 @@ function Tache() {
         <Navbar/>
     <div className="container_tache" >
     <h2>Mes Taches<small> Taches</small></h2>
-
+    <Toaster
+  position="top-center"
+  reverseOrder={true}
+/>
     <div>
       
       <Modal
@@ -167,7 +190,7 @@ function Tache() {
         <Box sx={{ ...style, width: 400 }}>
         <div className='Ajouter-form'>
         <form >
-     { ajouter ? (<h3>créer Taches</h3>):(<h3>Modifier tache </h3>)} 
+     { ajouter ? (<h3>Modifier tache</h3>):(<h3>Modifier tache </h3>)} 
         <input type='text' name="titre"required placeholder='titre' 
                  onChange={handleChangeInput}   value={taches.titre} />
            <input type='text' name="description"required placeholder='description' 
@@ -178,8 +201,28 @@ function Tache() {
              onChange={handleChangeInput} value={taches.data_fin}/>
           <input type='number' name="priorite"required placeholder='priorite' 
            onChange={handleChangeInput}  value={taches.priorite} />
-             <input type='text' name="etat_tache"required placeholder='etat_tache' 
-            onChange={handleChangeInput} value={taches.etat_tache}  />
+          
+
+<div className="row">
+                    <label htmlFor="etat_tache">etat tache: </label>
+                    <select name="etat_tache"  onChange={handleChangeInput}
+                   
+                    >
+                        <option value="" >Please select etat tache</option>
+                        {
+                       
+                       etat.map(e => (
+                             
+                              <option value={e.etat} key={e.id}  >
+                                  {e.etat}
+                                
+                              </option>
+                  
+                          ))
+                        }
+                    </select>
+
+                </div>
   
           <div className='row'>
           {ajouter && (<button type='button' onClick={()=>{update_Tache(taches._id)
@@ -226,7 +269,31 @@ function Tache() {
         <div className="col col-3" data-label="description">{t.description}</div>
         <div className="col col-4" data-label="data_debut">{t.data_debut}</div>
         <div className="col col-5" data-label="data_fin">{t.data_fin}</div>
-        <div className="col col-6" data-label="etat_tache">{t.etat_tache}</div>
+        <div className="col col-6" data-label="etat_tache">
+          
+          {t.etat_tache==="terminer" ?(
+            <div key={i}>
+        
+            <p 
+            style={{color:'#0EDC86'}} >{t.etat_tache}</p>
+         
+          
+          
+         </div>
+          ):(
+            <div key={i}>
+        
+        <p  style={{color:'#FF6E61'}} >{t.etat_tache}</p>
+     
+      
+     </div>
+          )
+          
+          }
+
+        
+        
+        </div>
         <div className="col col-7" data-label="priorite">{t.priorite}</div>
         <div className="col col-8" data-label="projet">{t.titre_projet}</div>
         <div className="col col-9" data-label="Actions">

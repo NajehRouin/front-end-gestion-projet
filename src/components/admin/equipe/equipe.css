@@ -118,3 +118,68 @@ font-size: 30px;
 
    
   }
+
+
+
+  .card_user {
+    box-shadow: rgb(15, 63, 84) 1px 1px 12px 6px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 400px;
+      margin: 3% 0px 0px 35% ;
+      border-radius: 30px;
+  }
+  
+  .card_user .text{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  }
+  
+  .card_user  img{
+      height: 300px;
+      border-radius: 50%;
+    margin-bottom:10px;
+  }
+  
+  .card_user .text h3{
+      font-size: 40px;
+      font-weight: 300;
+      color: rgb(10, 80, 98);
+  }
+  
+  .card_user .text p:nth-of-type(1){
+      color:#285da2;
+      font-size: 15px;
+      margin-top: 5px;
+  }
+  
+  .card_user .text p:nth-of-type(2){
+    color:#285da2;
+      font-size: 15px;
+      margin-top: 5px;
+      text-align: center;
+  }
+  .card_user .text p:nth-of-type(3){
+    color: #285da2;
+      font-size: 15px;
+      margin-top: 5px;
+      text-align: center;
+  }
+  .card_user .links{
+      width: 30%;
+      display: flex;
+      justify-content: space-evenly;
+  }
+  
+  .card_user .links i{
+      color: rgb(35, 182, 219);
+      font-size: 20px;
+      cursor: pointer;
+  }
+  
+  .card_user .links i:hover{
+      color:rgb(29, 157, 189) ;
+  }

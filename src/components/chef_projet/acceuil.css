@@ -175,3 +175,15 @@
     100%{transform: rotate(360deg);}
     
 }
+.btn_modif{
+  width: 160px;
+  background-color: rgb(3,165,206);
+  color: white;
+
+  letter-spacing: 2px;
+}
+.row_projet{
+  display: flex;
+  justify-content:space-evenly;
+
+}

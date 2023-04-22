@@ -4,6 +4,7 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as BiIcons from "react-icons/bi";
+import * as BsIcons from "react-icons/bs"
 
 export const SidebarData = [
 
@@ -26,10 +27,17 @@ export const SidebarData = [
     cName: "nav-text"
   },
   {
+    title: "mes réservations",
+    path: "/mes_reserve",
+    icon: <BsIcons.BsCartCheckFill />,
+    cName: "nav-text"
+  },
+  {
     title: "mon equipe",
     path: "/acceuil",
     icon: <IoIcons.IoMdPeople />,
     cName: "nav-text"
   },
+  
 
 ];

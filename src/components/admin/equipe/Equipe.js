@@ -25,6 +25,18 @@ const style = {
 };
 
 
+const styleUser = {
+  position: 'absolute',
+  top: '50%',
+  left: '9%',
+
+
+
+
+
+};
+
+
 const initialState = {
   nom_equipe: '',
   membre: [],
@@ -42,6 +54,10 @@ let Arrayper=[]
 
   const token=localStorage.getItem('token')
   const [open, setOpen] = useState(false);
+
+  const [openUser, setOpenUser] = useState(false);
+  const [getUserdetaill,setGetUserSDetaill]=useState([])
+  const [viewDetailUser,setViewDetailUser]=useState(false)
   const[ajouter,setAjouter]=useState(false);
   const [equip, setquip] = useState(initialState)
   const [detailUser,setDetailUser]=useState(state)
@@ -99,6 +115,8 @@ const getUserById=async(id)=>{
     await fetch('/user/getuserbyid/'+id).then(res=>res.json().then(data=>{
   
   console.log("User fin by id",data)
+  setGetUserSDetaill(data)
+  handleOpenUser()
   
     }))
       
@@ -167,6 +185,16 @@ if (Arrayper.length>0){
     
   };
 
+  const handleOpenUser = () => {
+ 
+    setOpenUser(true);
+  };
+  const handleCloseUser = () => {
+    
+    setOpenUser(false);
+
+    
+  };
 
   const getallUser=async()=>{
     try {
@@ -380,6 +408,45 @@ const Update_Eequipe = async(id)=>{
         </Box>
       </Modal>
     </div>
+
+{
+  viewDetailUser &&(
+<div>
+      
+      <Modal
+        open={openUser}
+        onClose={handleCloseUser}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+        style={styleUser}
+      >
+       
+        <div className="card_user">
+            <div className="text">
+           
+                <h3>{getUserdetaill.nom}  {getUserdetaill.prenom}</h3>
+                
+                <p>{getUserdetaill.email} </p>
+                <p>{getUserdetaill.role.libelle}  </p>
+                <p>{getUserdetaill.adress} </p>
+                
+            </div>
+            <div className="links">
+                <a  href="https://codepen.io/l-e-e/"><i className="fab fa-codepen"></i></a>
+                <a href="https://github.com/Leena26"><i className="fab fa-github"></i></a>
+                <a  href="https://www.youtube.com/channel/UCPOyUi82bRcPTdpDuSHVNbw"><i className="fab fa-youtube"></i></a>
+            </div>
+        </div>
+   
+      
+      </Modal>
+    </div>
+  )
+}
+    
+
+
+
     <Toaster
   position="top-center"
   reverseOrder={true}
@@ -418,7 +485,10 @@ handleOpen()
      
      <div key={i}>
         
-        <p  onClick={()=>{UserById(mem._id)}}>{mem.nom}</p>
+        <p  onClick={()=>{UserById(mem._id) 
+          setViewDetailUser(true)
+        
+          }}>{mem.nom}</p>
    
       
      </div>

@@ -1,23 +1,29 @@
 import React from 'react'
 import Navbar from '../navbar/Navbar'
 import './profil.css'
+import image from '../../../assets/images/user.png'
 function Profil() {
+  const chef =JSON.parse(localStorage.getItem("chef"))
   return (
 
     <>
     <Navbar/>
-    <div class="container">
-  <h2>Card Image</h2>
-  <p>Image at the top (card-img-top):</p>
-  <div class="card" style={{width:"400px"}}>
-    <img class="card-img-top"  src="img_avatar1.png" alt="Card"/>
-    <div class="card-body">
-      <h4 class="card-title">John Doe</h4>
-      <p class="card-text">Some example text some example text. John Doe is an architect and engineer</p>
-      <a href="/" class="btn btn-primary">See Profile</a>
-    </div>
-  </div>
-  </div>
+    <div className="card">
+            <div className="text">
+                <img src={image} alt=""/>
+                <h3>{chef.nom}  {chef.prenom}</h3>
+                
+                <p>{chef.email} </p>
+                <p>{chef.role.libelle} </p>
+                <p>{chef.adress} </p>
+                
+            </div>
+            <div className="links">
+                <a  href="https://codepen.io/l-e-e/"><i className="fab fa-codepen"></i></a>
+                <a href="https://github.com/Leena26"><i className="fab fa-github"></i></a>
+                <a  href="https://www.youtube.com/channel/UCPOyUi82bRcPTdpDuSHVNbw"><i className="fab fa-youtube"></i></a>
+            </div>
+        </div>
   
 </>
   )

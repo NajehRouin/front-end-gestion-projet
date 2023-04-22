@@ -77,12 +77,20 @@ function DashboardAdmin() {
             </Link>
           </li>
           <li>
-            <Link to="/materiel">
+            <Link to="/categories">
               <i className='fa-solid fa-circle-question nav-link-icon'></i>
-              <span className='nav-link-name'>Materiels</span>
+              <span className='nav-link-name'>Categories</span>
             </Link>
           </li>
-     
+      
+          <li>
+          <button type="button">Matériels  <span className="arrow"></span></button>
+          <ul className="dropdown">
+            <li><a href="/materiel">matériels </a></li>
+            <li><a href="/reserve"> matériels réservés </a></li>
+        
+          </ul>
+        </li>
 
 
    
