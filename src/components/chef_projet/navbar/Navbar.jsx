@@ -15,7 +15,7 @@ import { SidebarData } from "./SlidebarData";
 
 // STYLES
 import "./Navbar.css";
-
+import img from '../../../assets/images/logo_tt.png'
 export default function Navbar() {
   const LogOut=()=>{
     localStorage.removeItem("Login");
@@ -31,12 +31,16 @@ export default function Navbar() {
 
   return (
     <>
+
       <IconContext.Provider value={{ color: "#FFF" }}>
         {/* All the icons now are white */}
         <div className="navbar">
+        <img src={img} alt="logouser" id="imglog" className="imagechef" />
+        <p className="logo_chef"> Espace chef de projet</p>
           <Link to="#" className="menu-bars">
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
+        
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
           <ul className="nav-menu-items" onClick={showSidebar}>

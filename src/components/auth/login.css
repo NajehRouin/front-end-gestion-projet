@@ -14,10 +14,10 @@
 
   .imagelog{
     display: block;
-    margin-left: 10%;
+    margin-left: 25%;
     
-    width: 320px;
-  height: 230px;
+    width: 200px;
+  height: 110px;
   }
  
 
@@ -44,12 +44,13 @@
 }
 .login-form form input,
 .login-form form button{
-    width: 100%;
+    width: 70%;
     height: 40px;
-    margin:10px 0;
+    margin:10px 15%;
     padding: 0 5px;
     outline: rgb(3,165,206);
     border: 1px solid rgb(3,165,206);
+    border-radius: 10px;
 }
 
 .login-form form .row{

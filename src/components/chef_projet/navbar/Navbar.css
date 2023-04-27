@@ -31,12 +31,26 @@
     left: -100%;
     transition: 850ms;
   }
+
   
   .nav-menu.active {
     left: 0;
     transition: 350ms;
-  }
+  }  
   
+  
+  .logo_chef{
+    font-size: 17px;
+    cursor: pointer;
+    color: #fff;
+   margin-left: 10px;
+    font-family: 'Arial', cursive;
+   
+  }
+  .imagechef{
+    width: 70px;
+  height: 45px;
+  }
   .nav-text {
     display: flex;
     justify-content: flex-start;
@@ -59,7 +73,10 @@
   }
   
   .nav-text a:hover {
+    border-radius: 15px;
+    width: 70%;
     background-color: #c1c7cd;
+    color:#47494f
   }
   
   .nav-menu-items {

@@ -3,7 +3,7 @@ import './login.css'
 import Loading from '../admin/loading/Loading'
 import {Link}from 'react-router-dom'
 import axios from 'axios'
-import img from '../../assets/images/index.png'
+import img from '../../assets/images/logo_tt.png'
 function Login() {
   const [user,setUser]=useState({
     email:'',

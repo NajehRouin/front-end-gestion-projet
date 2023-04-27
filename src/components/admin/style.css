@@ -11,13 +11,17 @@
    top: 0;
    background-color: #285da2;
   }
+  .imageAdmin{
+    width: 70px;
+  height: 45px;
+  }
   .logo{
-    font-size: 35px;
+    font-size: 22px;
     cursor: pointer;
     color: #fff;
    
-    font-family: 'Edwardian Script ITC', cursive;
-    padding-top: 5px;
+    font-family: 'Arial', cursive;
+   
   }
   .topbarRight .searchbar{
     width: 100%;

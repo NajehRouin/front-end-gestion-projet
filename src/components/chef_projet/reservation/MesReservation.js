@@ -46,7 +46,7 @@ const [mesreserve,SetMesreserve]=useState([])
   
       <div className="col col-2">projet</div>
       <div className="col col-3">code_materiel</div>
-      <div className="col col-4">images</div>
+      <div className="col col-4">uls</div>
       <div className="col col-5">description</div>
       <div className="col col-6">date</div>
       <div className="col col-7">etats</div>
@@ -64,7 +64,7 @@ const [mesreserve,SetMesreserve]=useState([])
 
      <div className="col col-2" data-label="titre projet">{reserve.projet.titre_projet}</div>
      <div className="col col-3" data-label="code materiel">{reserve.materiel.code_materiel}</div>
-     <div className="col col-4" data-label="images materiel"> <img src={reserve.materiel.images.url} alt="" className='images' /></div>
+     <div className="col col-4" data-label="uls"> {reserve.materiel.uls}</div>
      <div className="col col-5" data-label="description">{reserve.description}</div>
      <div className="col col-6" data-label="date ">{reserve.date_reservation}</div>
      <div className="col col-7" data-label="confirmation">{reserve.confirmer}</div>

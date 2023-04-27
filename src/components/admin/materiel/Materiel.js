@@ -14,11 +14,26 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const initialState = {
   code_materiel: '',
-  libelle: '',
+  designation: '',
   categorie: '',
-
+  uls:'',
+  type:'',
    _id: ''
 }
+
+const Uls=[
+  {id:"1",uls:"tunis"},
+  {id:"2",uls:"manouba"},
+  {id:"3",uls:"ben arous"},
+  {id:"4",uls:"ariana"},
+]
+
+const Types=[
+  {id:"1",type:"capex"},
+  {id:"2",type:"opex"},
+
+]
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -36,7 +51,7 @@ const style = {
 function Materiel() {
 
   const [materiles,SetMateriles]=useState([])
-  const [images, setImages] = useState(false)
+
   const [loading, setLoading] = useState(false)
 const [materiel,setMateriel]=useState(initialState)
     const [open, setOpen] = useState(false);
@@ -44,6 +59,8 @@ const [materiel,setMateriel]=useState(initialState)
     const [categories,Setcategories]=useState([])
     const [categorie,Setcategorie]=useState()
     const [view,setView]=useState(false)
+    const [ULS,setULs]=useState()
+    const [TYPES,SetTypes]=useState()
     const handleOpen = () => {
  
       setOpen(true);
@@ -79,7 +96,7 @@ const [materiel,setMateriel]=useState(initialState)
   },[])
 
 
-
+{/*
   const handleUpload = async e =>{
     e.preventDefault()
     try {
@@ -109,7 +126,10 @@ const [materiel,setMateriel]=useState(initialState)
     } catch (err) {
         alert(err.response.data.msg)
     }
+}*/
 }
+{
+  /*
 const handleDestroy = async () => {
   try {
     
@@ -126,13 +146,38 @@ const handleDestroy = async () => {
 const styleUpload = {
   display: images ? "block" : "none"
 }
-
-
+*/
+}
 
 const handleChangeInput = e =>{
   const {name, value} = e.target
   setMateriel({...materiel, [name]:value})
   console.log("mate",materiel)
+}
+
+
+const handleULStchange=e=>{
+  const {name, value} = e.target
+  setMateriel({...materiel, [name]:value})
+  console.log("mate",materiel)
+
+ 
+    console.log('ULS',value)
+    setULs(value)
+    
+  
+}
+
+const handleTypetchange=e=>{
+  const {name, value} = e.target
+  setMateriel({...materiel, [name]:value})
+  console.log("mate",materiel)
+
+ 
+    console.log('ULS',value)
+    SetTypes(value)
+    
+  
 }
 
 const handleselectchange=e=>{
@@ -167,7 +212,7 @@ const handleSubmit = async e =>{
  // console.log("empajouter",{...projet})
 
   try {
-    await axios.post('/materiel/matereil', {...materiel, images})
+    await axios.post('/materiel/matereil', {...materiel})
   handleClose()
   setTimeout(() => {
     // console.log("msg",employe)
@@ -237,7 +282,7 @@ const getmatById=async(id)=>{
       console.log("getmateriel",data.result)
 
      setMateriel(data.result)
-      setImages(data.result.images)
+      
   
     })
   } catch (error) {
@@ -256,11 +301,11 @@ const updateMateriel=async(id)=>{
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body:JSON.stringify({...materiel,images}),
+      body:JSON.stringify({...materiel}),
     }).then(res=>res.json()).then(async data=>{
      
       handleClose()
-      toast.success(<b>projet {materiel.libelle} modifier avec succès</b>)
+      toast.success(<b>projet {materiel.designation} modifier avec succès</b>)
       setTimeout(() => {
        // console.log("msg",employe)
         getAllMateiel()
@@ -295,10 +340,97 @@ const updateMateriel=async(id)=>{
        { ajouter ? (<h3>créer materiel</h3>):(<h3>modifer materiel </h3>)} 
         <input type='text' name="code_materiel"required placeholder='code_materiel' 
               onChange={handleChangeInput} value={materiel.code_materiel}    />
-           <input type='text' name="libelle"required placeholder='libelle' 
-           onChange={handleChangeInput}  value={materiel.libelle}    />
+           <input type='text' name="designation"required placeholder='designation' 
+           onChange={handleChangeInput}  value={materiel.designation}    />
                   
-                  <div className="upload">
+          <div className="row">
+                    <label htmlFor="uls">ULS :</label>
+                    <select name="uls"  onChange={handleULStchange}
+                 value={materiel.uls} 
+                    >
+                        <option value="" >Please select ULS</option>
+                        {
+                       
+                       Uls.map(u => (
+                             
+                              <option value={u.uls} key={u.id}  >
+                                  {u.uls}
+                                
+                              </option>
+                  
+                          ))
+                        }
+                    </select>
+
+                </div>
+                {
+                    view ? ( <div className='user'>
+                      
+                   
+                      
+                      <p className='perso' key={materiel._id}>
+                      {materiel.uls} 
+                     
+                      </p>
+                     </div> ):(<div className='user'> 
+                     
+                       
+                  
+                              <p className='perso' >
+                                
+                              {ULS}
+                                  </p>
+                       
+                       
+                     
+                     </div>)
+                  }
+                <div className="row">
+                    <label htmlFor="type">Types :</label>
+                    <select name="type"  onChange={handleTypetchange}
+                    value={materiel.type} 
+                    >
+                        <option value="" >Please select Type</option>
+                        {
+                       
+                       Types.map(t => (
+                             
+                              <option value={t.type} key={t.id}  >
+                                  {t.type}
+                                
+                              </option>
+                  
+                          ))
+                        }
+                    </select>
+
+                </div>
+
+                {
+                    view ? ( <div className='user'>
+                      
+                   
+                      
+                      <p className='perso' key={materiel._id}>
+                      {materiel.type} 
+                     
+                      </p>
+                     </div> ):(<div className='user'> 
+                     
+                       
+                  
+                              <p className='perso' >
+                                
+                              {TYPES}
+                                  </p>
+                       
+                       
+                     
+                     </div>)
+                  }
+
+                 {
+                 /* <div className="upload">
                    
                 <input type="file" name="file" id="file_up" onChange={handleUpload}/>
                 {
@@ -310,7 +442,8 @@ const updateMateriel=async(id)=>{
                     </div>
                 }
                 
-            </div>
+            </div>*/
+}
            
               <div className="row">
                     <label htmlFor="categorie">categorie: </label>
@@ -387,17 +520,17 @@ const updateMateriel=async(id)=>{
         <BsFillPlusCircleFill className='add_materiel'  onClick={()=>{
     setAjouter(true)
     setMateriel(initialState)
-    setImages(false)
+   
 handleOpen()
   }}/>
     <ul className="responsive-table-materiel">
     <li className="table-header">
       <div className="col col-1"> Id</div>
       <div className="col col-2">code_materiel</div>
-      <div className="col col-3">libelle</div>
+      <div className="col col-3">designation</div>
       <div className="col col-4">categorie</div>
-      <div className="col col-5">images</div>
-     
+      <div className="col col-5">Uls</div>
+      <div className="col col-6">type</div>
     
       <div className="col col-9">Actions</div>
     </li>
@@ -409,9 +542,10 @@ handleOpen()
      <li className="table-row"key={mat._id}>
      <div className="col col-1" data-label="Id">{index}</div>
      <div className="col col-2" data-label="code_materiel">{mat.code_materiel}</div>
-     <div className="col col-3" data-label="libelle">{mat.libelle}</div>
+     <div className="col col-3" data-label="libelle">{mat.designation}</div>
      <div className="col col-4" data-label="categorie">{mat.categorie.type_cat}</div>
-     <div className="col col-5" data-label="images"> <img src={mat.images.url} alt="" className='images' /></div>
+     <div className="col col-5" data-label="ULS">{mat.uls}</div>
+     <div className="col col-5" data-label="Types">{mat.type}</div>
     
      <div className="col col-9" data-label="Actions">
      <div className='row'>

@@ -10,7 +10,8 @@ import axios from 'axios'
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 import toast, { Toaster } from 'react-hot-toast';
-
+import './mes_reservation.css'
+import { AiOutlineClear ,AiFillCloseCircle} from "react-icons/ai";
 const initialState = {
   code_materiel: '',
   libelle: '',
@@ -27,7 +28,18 @@ const initialReserve = {
   date_reservation:'',
    _id: ''
 }
+const Uls=[
+  {id:"1",uls:"tunis"},
+  {id:"2",uls:"manouba"},
+  {id:"3",uls:"ben arous"},
+  {id:"4",uls:"ariana"},
+]
 
+const Types=[
+  {id:"1",type:"capex"},
+  {id:"2",type:"opex"},
+
+]
 const style = {
   position: 'absolute',
   top: '50%',
@@ -51,10 +63,14 @@ const [reserve,setreserve]=useState(initialReserve)
 
     const [open, setOpen] = useState(false);
     const[ajouter,setAjouter]=useState(false);
-
-
+    const [categories,Setcategories]=useState([])
+    const [category, setCategory]=useState([])
     const [projets,SetProjets]=useState([])
     const [view,setView]=useState(false)
+
+    const [ULS,setULs]=useState()
+    const [TYPES,SetTypes]=useState()
+
     const handleOpen = () => {
  
       setOpen(true);
@@ -66,7 +82,7 @@ const [reserve,setreserve]=useState(initialReserve)
   const getAllMateiel =async()=>{
 
     fetch('/materiel/materiel').then(res=>res.json()).then(data=>{
-      //console.log("materiel",data.result)
+     
       //setLoad(true)
       //console.log("msg",data)
       setTimeout(() => {
@@ -77,9 +93,16 @@ const [reserve,setreserve]=useState(initialReserve)
       
     })
   }
+  useEffect(()=>{
+    fetch('/categorie/categorie').then(res=>res.json()).then(data=>{
+  
+    Setcategories(data)
+  
+    })
+  },[])
 
   const Mesprojet=async()=>{
-    console.log("id",(chef._id))
+
    
 
 
@@ -101,7 +124,7 @@ const [reserve,setreserve]=useState(initialReserve)
       fetch('/projet/projet').then(res=>res.json()).then(result=>{
        
         const projet=result.filter(item => item.equipe._id===data.result._id)
-        console.log("Mes Projet",projet)
+      
         
         SetProjets(projet)
       
@@ -123,6 +146,7 @@ const [reserve,setreserve]=useState(initialReserve)
 
     getAllMateiel()
     Mesprojet()
+    
   },[])
 
 
@@ -135,7 +159,7 @@ const [reserve,setreserve]=useState(initialReserve)
         method:'get',
     
       }).then(res=>res.json()).then(data=>{
-        console.log("getmateriel",data.result)
+      
   
        setMateriel(data.result)
   
@@ -153,7 +177,7 @@ const [reserve,setreserve]=useState(initialReserve)
 const handleChangeInput = e =>{
   const {name, value} = e.target
   setreserve({...reserve, [name]:value})
-  console.log("mate",reserve)
+
 }
 
 
@@ -181,13 +205,68 @@ reserve.chef=chef._id
 }
 
 
+const handleULStchange=e=>{
+  const {name, value} = e.target
+ 
+    console.log('ULS',value)
+    setULs(value)
+
+  
+}
+
+const handleTypetchange=e=>{
+  const {name, value} = e.target
+ 
+
+SetTypes(value)  
+}
 
 
+const handleCategory = e => {
+  const {name, value} = e.target
+  console.log('categorie',value)
+  setCategory(e.target.value)
 
 
+  if(!TYPES){
+    alert("choisissez un type ")
+
+    return false
+  }
+  if((!ULS)){
+    alert("choisissez une ULS ")
+    return false
+  }
+  const filter=materiles.filter(item=>   item.uls===ULS&&  item.type===TYPES &&   item.categorie.type_cat===value  )
+  console.log("filter",filter)
+  if(filter.length ===0){
+    alert(" filtre non valide ")
+    window.location.href="/reservation"
+    return false;
+  }else{
+   
+    SetMateriles(filter)
+  }
+
+  //setSearch('')
+}
 
 
+const filterMateriel=async()=>{
+  const filter=materiles.filter(item=>item.categorie.type_cat===category&& item.uls===ULS&&  item.type===TYPES  )
+  console.log("fiter",filter)
+  SetMateriles(filter)
 
+}
+
+const clearfilter =async()=>{
+  setCategory("categories")
+  SetTypes("Type")
+  setULs("ULS")
+  console.log("hi")
+  //getAllMateiel()
+  window.location.href="/reservation"
+}
   return (
     <>
     <Navbar />
@@ -263,6 +342,73 @@ reserve.chef=chef._id
   reverseOrder={true}
 />
 
+<div className="filter_menu">
+     
+    
+            <div className="row sort">
+                    <label htmlFor="uls">filters par ULS :</label>
+                    <select name="uls"  onChange={handleULStchange}
+                 value={materiel.uls} 
+                    >
+                        <option value="" > ULS</option>
+                        {
+                       
+                       Uls.map(u => (
+                             
+                              <option value={u.uls} key={u.id}  >
+                                  {u.uls}
+                                
+                              </option>
+                  
+                          ))
+                        }
+                    </select>
+
+                </div>
+                <div className="row sort">
+                    <label htmlFor="type"> filter par Types :</label>
+                    <select name="type"  onChange={handleTypetchange} 
+                    value={materiel.type} 
+                    >
+                        <option value="" > Type</option>
+                        {
+                       
+                       Types.map(t => (
+                             
+                              <option value={t.type} key={t.id}  >
+                                  {t.type}
+                                
+                              </option>
+                  
+                          ))
+                        }
+                    </select>
+
+                </div>
+
+                <div className="row">
+                <span>Filters par Categories: </span>
+                <select name="categorie" value={materiel.categorie.type_cat} onChange={handleCategory} >
+                    <option value=''>categories</option>
+                    {
+                        categories.map(category => (
+                            <option value={category.type_cat} key={category._id}>
+                                {category.type_cat}
+                            </option>
+                        ))
+                    }
+                </select>
+            </div>
+                <div className="row sort">
+                  <AiFillCloseCircle
+                    color='gray'
+                    enableBackground='gray'
+                    size={22}
+                    onClick={clearfilter}
+                  />
+                         
+                </div>
+        </div>
 
 
 
@@ -272,9 +418,10 @@ reserve.chef=chef._id
     <li className="table-header">
       <div className="col col-1"> Id</div>
       <div className="col col-2">code_materiel</div>
-      <div className="col col-3">libelle</div>
+      <div className="col col-3">designation</div>
       <div className="col col-4">categorie</div>
-      <div className="col col-5">images</div>
+      <div className="col col-5">uls</div>
+      <div className="col col-6">types</div>
      
     
       <div className="col col-9">Actions</div>
@@ -287,9 +434,10 @@ reserve.chef=chef._id
      <li className="table-row"key={mat._id}>
      <div className="col col-1" data-label="Id">{index}</div>
      <div className="col col-2" data-label="code_materiel">{mat.code_materiel}</div>
-     <div className="col col-3" data-label="libelle">{mat.libelle}</div>
+     <div className="col col-3" data-label="designation">{mat.designation}</div>
      <div className="col col-4" data-label="categorie">{mat.categorie.type_cat}</div>
-     <div className="col col-5" data-label="images"> <img src={mat.images.url} alt="" className='images' /></div>
+     <div className="col col-5" data-label="designation">{mat.uls}</div>
+     <div className="col col-6" data-label="designation">{mat.type}</div>
     
      <div className="col col-8" data-label="Actions">
      <div className='row'>

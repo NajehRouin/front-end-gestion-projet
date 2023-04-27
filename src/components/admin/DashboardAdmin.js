@@ -6,7 +6,7 @@ import { AiTwotoneAppstore } from "react-icons/ai";
 import { GoSearch } from "react-icons/go";
 import { Link } from 'react-router-dom';
 import './style.css'
-
+import img from '../../assets/images/logo_tt.png'
 import image from '../../assets/images/userfin.png'
 function DashboardAdmin() {
   const LogOut=()=>{
@@ -20,7 +20,7 @@ function DashboardAdmin() {
     <input type="checkbox" id="checkbox" />
     <div className="topbarContainer">
       <div className="topbarLeft">
-      
+      <img src={img} alt="logouser" id="imglog" className="imageAdmin" />
       <p className="logo"> Espace Administrateur</p>
         <label htmlFor="checkbox" >
           <GoThreeBars className="menu" />
@@ -99,7 +99,7 @@ function DashboardAdmin() {
               }}>
             <Link to="/" className="out">
               <i className="fa fa-power-off" aria-hidden="true"></i>
-              <span className='nav-link-name' >Logout</span>
+              <span className='nav-link-name' >Déconnexion</span>
             </Link>
           </li>
         </ul>

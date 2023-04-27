@@ -9,7 +9,7 @@ import * as BsIcons from "react-icons/bs"
 export const SidebarData = [
 
   {
-    title: "Home",
+    title: "Acceuil",
     path: "/acceuil",
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text"

@@ -535,7 +535,7 @@ else{
           
           console.log("objet ",pro._id)
           getprojet(pro._id)
-          handleOpen()
+          handleOpenEtat()
         }}style={{color:'blue'}} />
         
     
