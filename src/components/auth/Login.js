@@ -72,10 +72,17 @@ const onChangeInput=e=>{
           window.location.href='/admin';
           return true
         }
+
         if (data.role.libelle==="chef projet"){
           localStorage.setItem('Login', true)
           localStorage.setItem('chef',JSON.stringify(data))
           window.location.href='/acceuil';
+          return true
+        }
+        if (data.role.libelle==="collaborateur"){
+          localStorage.setItem('Logincol', true)
+          localStorage.setItem('collaborateur',JSON.stringify(data))
+          window.location.href='/collaborateur';
           return true
         }
 

@@ -47,9 +47,10 @@ const [mesreserve,SetMesreserve]=useState([])
       <div className="col col-2">projet</div>
       <div className="col col-3">code_materiel</div>
       <div className="col col-4">uls</div>
-      <div className="col col-5">description</div>
-      <div className="col col-6">date</div>
-      <div className="col col-7">etats</div>
+      <div className="col col-5">unite</div>
+      <div className="col col-6">metre</div>
+      <div className="col col-7">date</div>
+      <div className="col col-8">etats</div>
      
     
 
@@ -65,9 +66,44 @@ const [mesreserve,SetMesreserve]=useState([])
      <div className="col col-2" data-label="titre projet">{reserve.projet.titre_projet}</div>
      <div className="col col-3" data-label="code materiel">{reserve.materiel.code_materiel}</div>
      <div className="col col-4" data-label="uls"> {reserve.materiel.uls}</div>
-     <div className="col col-5" data-label="description">{reserve.description}</div>
-     <div className="col col-6" data-label="date ">{reserve.date_reservation}</div>
-     <div className="col col-7" data-label="confirmation">{reserve.confirmer}</div>
+     <div className="col col-5" data-label="unite"> {reserve.unite!==0 ?(
+        <div key={index}>
+    
+        <p >{reserve.unite}</p>
+     
+      
+      
+     </div>
+      ):(
+        <div key={index}>
+    
+    <p  >-</p>
+ 
+  
+ </div>
+      )
+      
+      }</div>
+     <div className="col col-6" data-label="metre"> {reserve.metre!==0 ?(
+        <div key={index}>
+    
+        <p >{reserve.metre} metre</p>
+     
+      
+      
+     </div>
+      ):(
+        <div key={index}>
+    
+    <p >-</p>
+ 
+  
+ </div>
+      )
+      
+      } </div>
+     <div className="col col-7" data-label="date ">{reserve.date_reservation}</div>
+     <div className="col col-8" data-label="confirmation">{reserve.confirmer}</div>
   
    </li>
    ))

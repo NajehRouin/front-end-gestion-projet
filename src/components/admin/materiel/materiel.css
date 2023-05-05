@@ -4,6 +4,15 @@
     padding: 5px;
  
   }
+  .container_materiel  .row{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    
+}
+.container_materiel  .row input{
+  width: 50px;
+}
   .add_materiel{
     margin-left: 20px;
  font-size: 20px;

@@ -180,9 +180,10 @@ await fetch('/reservation/reservation/'+id,{
       <div className="col col-3">projet</div>
       <div className="col col-4">code_materiel</div>
       <div className="col col-5">uls</div>
-      <div className="col col-6">description</div>
-      <div className="col col-7">date</div>
-      <div className="col col-8">etats</div>
+      <div className="col col-6">metre</div>
+      <div className="col col-7">unite</div>
+      <div className="col col-8">date</div>
+      <div className="col col-9">etats</div>
      
     
 
@@ -197,11 +198,52 @@ await fetch('/reservation/reservation/'+id,{
      <div className="col col-2" data-label="chef">{reserve.chef.nom}</div>
      <div className="col col-3" data-label="titre projet">{reserve.projet.titre_projet}</div>
      <div className="col col-4" data-label="code materiel">{reserve.materiel.code_materiel}</div>
-     <div className="col col-5" data-label="images materiel"> {reserve.materiel.uls} </div>
-     <div className="col col-6" data-label="description">{reserve.description}</div>
-     <div className="col col-7" data-label="date ">{reserve.date_reservation}</div>
-     <div className="col col-8" data-label="confirmation"   
+     <div className="col col-5" data-label="uls"> {reserve.materiel.uls} </div>
+     <div className="col col-6" data-label="unite">
+       {reserve.unite!==0 ?(
+        <div key={index}>
+    
+        <p >{reserve.unite}</p>
+     
+      
+      
+     </div>
+      ):(
+        <div key={index}>
+    
+    <p  >-</p>
+ 
+  
+ </div>
+      )
+      
+      }
+     
+     
+     
+    </div>
+     <div className="col col-7" data-label="metre"> {reserve.metre!==0 ?(
+        <div key={index}>
+    
+        <p >{reserve.metre} metre</p>
+     
+      
+      
+     </div>
+      ):(
+        <div key={index}>
+    
+    <p >-</p>
+ 
+  
+ </div>
+      )
+      
+      }</div>
+     <div className="col col-8" data-label="date ">{reserve.date_reservation}</div>
+     <div className="col col-9" data-label="confirmation"   
        onClick={()=>{
+
         getReserve(reserve._id)  
         handleOpenEtat()
 }}

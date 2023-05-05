@@ -3,6 +3,7 @@ import Navbar from '../navbar/Navbar'
 import {BsPencilFill} from "react-icons/bs";
 import { useState,useEffect } from 'react'
 import './tache.css'
+import { GrProjects } from "react-icons/gr";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import toast, { Toaster } from 'react-hot-toast';
@@ -26,6 +27,7 @@ const initialState = {
   data_fin: '',
   priorite:1,
   etat_tache:'en_attente',
+  titre_projet:'',
   _id: ''
 }
 
@@ -34,7 +36,12 @@ const etat=[
   {id:"2",etat:"en_cours"},
   {id:"3",etat:"terminer"},
 ]
-
+const initialStateprojet = {
+  titre_projet:'',
+  tache:[],
+  etat_projet:"en_attente",
+  _id: ''
+}
 
 function Tache() {
   const chef =JSON.parse(localStorage.getItem("chef"))
@@ -45,8 +52,9 @@ function Tache() {
   const [id,SetId]=useState()
   const [open, setOpen] = useState(false);
   const [taches,setTache]=useState(initialState)
-
+  const [openTache, setOpenTache] = useState(false);
   const[ajouter,setAjouter]=useState(false);
+  const [projet, SetProjet] = useState(initialStateprojet)
 
   const handleOpen = () => {
    
@@ -56,6 +64,13 @@ function Tache() {
     setOpen(false);
   };
   
+  const handleOpenTache = () => {
+   
+    setOpenTache(true);
+  };
+  const handleCloseTache = () => {
+    setOpenTache(false);
+  };
     const filterprojet=async()=>{
       console.log("nom",JSON.stringify(chef._id))
       const membre=chef._id
@@ -98,9 +113,45 @@ function Tache() {
   
     }
   
-   
+
   
-  
+    const updateProjet=async(id)=>{
+      const {tache}=projet
+      
+      
+      const newTache=await fetch('/tache/tache', {
+        method: 'POST',
+        headers: {
+          Accept: 'application.json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({...taches})
+        
+      })
+          
+      const result = await newTache.json();
+       console.log("result",result)
+      tache.push(result.result._id)
+      console.log("projet",{...projet})
+      await fetch('/projet/projet/'+id,{
+        method:'put',
+        headers:{
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({...projet}),
+      }).then(res=>res.json()).then(async data=>{
+        console.log(data)
+        handleClose()
+        toast.success(<b>tache créer</b>)
+        setTimeout(() => {
+          // console.log("msg",employe)
+          filterprojet()
+         }, 300);
+      })
+      
+      
+        }
     useEffect(()=>{
       filterprojet()
      //myProject()
@@ -115,15 +166,7 @@ function Tache() {
       console.log("tache input",{taches})
     
     }
-    const handleChangeSelect = e =>{
-  
-
-      const {name, value} = e.target
-      console.log("tache select", value)
-      setTache({...taches, [name]:value})
-      console.log("tache select",{taches})
-    
-    }
+ 
     
   const get_Taches=async(id)=>{
     try {
@@ -170,6 +213,31 @@ function Tache() {
       console.log(error)
     }
   }
+  const handleselectchange=e=>{
+    const {name, value} = e.target
+   // SetProjet({...projet, [name]:value})
+ 
+  
+ 
+      console.log('projet',value)
+      
+      console.log('name',name)
+      try {
+       fetch('/projet/projet/'+value,{
+          method:'get',
+      
+        }).then(res=>res.json()).then(data=>{
+          console.log("getprojet",data)
+          SetProjet(data)
+          setTache({...taches, [name]:data.titre_projet})
+          console.log("tache select",{taches})
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    
+  }
+  
   return (
     <>
         <Navbar/>
@@ -242,7 +310,75 @@ function Tache() {
       </Modal>
     </div>
 
+    <div>
+      
+      <Modal
+        open={openTache}
+        onClose={handleCloseTache}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+        <div className='Ajouter-form'>
+        <form >
+    <h3>créer Taches</h3>
+        <input type='text' name="titre" required placeholder='titre' 
+                 onChange={handleChangeInput}   />
+           <input type='text' name="description"required placeholder='description' 
+            onChange={handleChangeInput}  />
+          <input type='date' name="data_debut" required placeholder='data_debut' 
+               onChange={handleChangeInput}   />
+          <input type='date' name="data_fin" required placeholder='data_fin' 
+             onChange={handleChangeInput} />
+          <input type='number' name="priorite" required placeholder='priorite' 
+           onChange={handleChangeInput}   />
+               {!ajouter && <input type='text' name="etat_tache" required placeholder='etat_tache' 
+            onChange={handleChangeInput}   />
+  }
+      <div className="row">
+                    <label htmlFor="titre_projet">Mes projets: </label>
+                    <select name="titre_projet" 
+                  onChange={handleselectchange} 
+                    >
+                        <option value="" >Please select a projet</option>
+                        {
+                            projets.map(p => (
+                              <option value={p._id} key={p._id} >
+                                  {p.titre_projet}
+                                 
+                              </option>
+                       
+                          ))
+                         
+                        }
+                        
+                    </select>
+                </div>
+          <div className='row'>
+          {ajouter ?  ( <button type='button' onClick={()=>{
+                 updateProjet(projet._id)
+                }}>créer</button>):(<button type='button' onClick={()=>{
+                 
+                 
+                  }}>Modifier tache</button>)}
+                
+                
+            
+         
+          </div>
+   
+        </form>
 
+    </div>
+   
+        </Box>
+      </Modal>
+    </div>
+    <GrProjects className='add'  onClick={()=>{
+    setAjouter(true)
+   // SetProjet(initialState)
+handleOpenTache()
+  }}/>
     <ul className="responsive-table-tache">
     
     <li className="table-header">
